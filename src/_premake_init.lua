@@ -531,6 +531,7 @@
 			"C11",                 -- DEPRECATED
 
 			"NoLibSysDir",        --disable adding /usr/lib on linux
+			"MacOSXBundle",       -- DEPRECATED
 		},
 		aliases = {
 			FatalWarnings = { "FatalWarnings", "FatalCompileWarnings", "FatalLinkWarnings" },
@@ -1514,6 +1515,16 @@
 	end,
 	function(value)
 		entrypoint "mainCRTStartup"
+	end)
+
+-- 8 May 2017
+
+	api.deprecateValue("flags", "MacOSXBundle", 'Use `sharedlibtype "OSXBundle"` instead',
+	function(value)
+		sharedlibtype "OSXBundle"
+	end,
+	function(value)
+		sharedlibtype "Default"
 	end)
 
 -----------------------------------------------------------------------------
