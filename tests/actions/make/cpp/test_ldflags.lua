@@ -23,7 +23,7 @@
 	local function prepare(calls)
 		local cfg = test.getconfig(prj, "Debug")
 		local toolset = p.tools.gcc
-		make.ldFlags(cfg, toolset)
+		make.cpp.ldFlags(cfg, toolset)
 	end
 
 
@@ -34,7 +34,7 @@
 	function suite.checkDefaultValues()
 		prepare()
 		test.capture [[
-  ALL_LDFLAGS += $(LDFLAGS)
+ALL_LDFLAGS += $(LDFLAGS)
 		]]
 	end
 
@@ -46,33 +46,33 @@
 		libdirs { "../libs", "libs" }
 		prepare()
 		test.capture [[
-  ALL_LDFLAGS += $(LDFLAGS) -L../libs -Llibs
+ALL_LDFLAGS += $(LDFLAGS) -L../libs -Llibs
 		]]
 	end
-
+	
 	function suite.checkLibDirs_X86_64()
 		architecture ("x86_64")
 		system (p.LINUX)
 		prepare()
 		test.capture [[
-  ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 		]]
 	end
-
+	
 	function suite.checkLibDirs_X86()
 		architecture ("x86")
 		system (p.LINUX)
 		prepare()
 		test.capture [[
-  ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib32 -m32
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib32 -m32
 		]]
 	end
-
+	
 	function suite.checkLibDirs_X86_64_MacOSX()
 		architecture ("x86_64")
 		system (p.MACOSX)
 		prepare()
 		test.capture [[
-  ALL_LDFLAGS += $(LDFLAGS) -m64
+ALL_LDFLAGS += $(LDFLAGS) -m64
 		]]
 	end

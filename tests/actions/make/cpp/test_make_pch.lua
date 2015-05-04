@@ -23,12 +23,12 @@
 
 	local function prepareVars()
 		local cfg = test.getconfig(prj, "Debug")
-		make.pch(cfg)
+		make.cpp.pch(cfg)
 	end
 
 	local function prepareRules()
 		local cfg = test.getconfig(prj, "Debug")
-		make.pchRules(cfg.project)
+		make.cpp.pchRules(cfg.project)
 	end
 
 
@@ -64,8 +64,8 @@
 		pchheader "include/myproject.h"
 		prepareVars()
 		test.capture [[
-  PCH = include/myproject.h
-  GCH = $(OBJDIR)/$(notdir $(PCH)).gch
+PCH = include/myproject.h
+GCH = $(OBJDIR)/$(notdir $(PCH)).gch
 		]]
 	end
 
@@ -79,7 +79,7 @@
 		includedirs { "../src/host" }
 		prepareVars()
 		test.capture [[
-  PCH = ../src/host/premake.h
+PCH = ../src/host/premake.h
 		]]
 	end
 
@@ -133,6 +133,6 @@ endif
 			includedirs { "../src/host" }
 			prepareVars()
 			test.capture [[
-  PCH = ../../src/host/premake.h
+PCH = ../../src/host/premake.h
 			]]
 		end

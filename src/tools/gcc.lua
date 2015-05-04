@@ -402,8 +402,6 @@
 		return flags
 	end
 
-
-
 --
 -- Return the list of libraries to link, decorated with flags as needed.
 --
@@ -428,9 +426,11 @@
 			end
 		end
 
-		if not nogroups and #result > 1 and (cfg.linkgroups == p.ON) then
-			table.insert(result, 1, "-Wl,--start-group")
-			table.insert(result, "-Wl,--end-group")
+		local function stripLibName(name)
+			if name:startswith("lib") then
+					return path.getbasename(name):sub(4)
+			end
+			return name
 		end
 
 		-- The "-l" flag is fine for system libraries
@@ -444,39 +444,41 @@
 				table.insert(result, path.getbasename(link))
 			elseif path.isobjectfile(link) then
 				table.insert(result, link)
+			elseif link:find("/", nil, true) then
+				-- full path specified, treat it like a sibling
+				table.insert(result, link)
 			else
 				local name = path.getname(link)
 
-				-- Check whether link mode decorator is present 
+				-- Check whether link mode decorator is present
 				if name:endswith(":static") then
-					name = string.sub(name, 0, -8)
-					if name:startswith("lib") then
-						name = path.getbasename(name):sub(4)
-					end
+					name = stripLibName(string.sub(name, 0, -8))
 					table.insert(static_syslibs, "-l" .. name)
 				elseif name:endswith(":shared") then
-					name = string.sub(name, 0, -8)
-					if name:startswith("lib") then
-						name = path.getbasename(name):sub(4)
-					end
+					name = stripLibName(string.sub(name, 0, -8))
 					table.insert(shared_syslibs, "-l" .. name)
 				else
-					if name:startswith("lib") then
-						name = path.getbasename(name):sub(4)
-					end
+					name = stripLibName(name)
 					table.insert(shared_syslibs, "-l" .. name)
 				end
 			end
+		end
+
+		if not nogroups and #result > 1 and (cfg.linkgroups == p.ON) then
+			table.insert(result, 1, "-Wl,--start-group")
+			table.insert(result, "-Wl,--end-group")
 		end
 
 		local move = function(a1, a2)
 			local t = #a2
 			for i = 1, #a1 do a2[t + i] = a1[i] end
 		end
+
 		if #static_syslibs > 1 then
 			table.insert(static_syslibs, "-Wl,-Bdynamic")
 			move(static_syslibs, result)
 	    end
+
 		move(shared_syslibs, result)
 
 		return result

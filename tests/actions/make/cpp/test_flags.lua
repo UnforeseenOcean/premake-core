@@ -23,7 +23,7 @@
 	local function prepare(calls)
 		local cfg = test.getconfig(prj, "Debug")
 		local toolset = p.tools.gcc
-		p.callarray(make, calls, cfg, toolset)
+		p.callarray(make.cpp, calls, cfg, toolset)
 	end
 
 
@@ -35,6 +35,6 @@
 		includedirs { "src/include", "../include" }
 		prepare { "includes" }
 		test.capture [[
-  INCLUDES += -Isrc/include -I../include
+INCLUDES += -Isrc/include -I../include
 		]]
 	end

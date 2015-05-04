@@ -18,12 +18,17 @@
 
 	function suite.setup()
 		p.escaper(make.esc)
+		make.cpp.initialize()
 		wks = test.createWorkspace()
 	end
 
 	local function prepare()
 		prj = p.workspace.getproject(wks, 1)
-		make.cppFileRules(prj)
+		p.oven.bake()
+
+		make.cpp.createRuleTable(prj)
+		make.cpp.createFileTable(prj)
+		make.cpp.outputFileRuleSection(prj)
 	end
 
 
@@ -35,21 +40,14 @@
 		files { "src/hello.cpp", "src/greetings/hello.cpp" }
 		prepare()
 		test.capture [[
+# File Rules
+# #############################################
+
 $(OBJDIR)/hello.o: src/greetings/hello.cpp
 	@echo $(notdir $<)
-ifeq (posix,$(SHELLTYPE))
-	$(SILENT) mkdir -p $(OBJDIR)
-else
-	$(SILENT) mkdir $(subst /,\\,$(OBJDIR))
-endif
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/hello1.o: src/hello.cpp
 	@echo $(notdir $<)
-ifeq (posix,$(SHELLTYPE))
-	$(SILENT) mkdir -p $(OBJDIR)
-else
-	$(SILENT) mkdir $(subst /,\\,$(OBJDIR))
-endif
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
 		]]
@@ -64,21 +62,14 @@ endif
 		files { "src/hello.c", "src/test.cpp" }
 		prepare()
 		test.capture [[
+# File Rules
+# #############################################
+
 $(OBJDIR)/hello.o: src/hello.c
 	@echo $(notdir $<)
-ifeq (posix,$(SHELLTYPE))
-	$(SILENT) mkdir -p $(OBJDIR)
-else
-	$(SILENT) mkdir $(subst /,\\,$(OBJDIR))
-endif
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/test.o: src/test.cpp
 	@echo $(notdir $<)
-ifeq (posix,$(SHELLTYPE))
-	$(SILENT) mkdir -p $(OBJDIR)
-else
-	$(SILENT) mkdir $(subst /,\\,$(OBJDIR))
-endif
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
 		]]
@@ -100,15 +91,19 @@ endif
 			buildoutputs { "%{cfg.objdir}/%{file.basename}.obj" }
 		prepare()
 		test.capture [[
+# File Rules
+# #############################################
+
 ifeq ($(config),debug)
 obj/Debug/hello.obj: hello.x
-	@echo "Compiling hello.x"
+	@echo Compiling hello.x
 	$(SILENT) cxc -c "hello.x" -o "obj/Debug/hello.xo"
 	$(SILENT) c2o -c "obj/Debug/hello.xo" -o "obj/Debug/hello.obj"
 endif
+
 ifeq ($(config),release)
 obj/Release/hello.obj: hello.x
-	@echo "Compiling hello.x"
+	@echo Compiling hello.x
 	$(SILENT) cxc -c "hello.x" -o "obj/Release/hello.xo"
 	$(SILENT) c2o -c "obj/Release/hello.xo" -o "obj/Release/hello.obj"
 endif
@@ -127,15 +122,19 @@ endif
 			buildinputs { "%{file.path}.inc", "%{file.path}.inc2" }
 		prepare()
 		test.capture [[
+# File Rules
+# #############################################
+
 ifeq ($(config),debug)
 obj/Debug/hello.obj: hello.x hello.x.inc hello.x.inc2
-	@echo "Compiling hello.x"
+	@echo Compiling hello.x
 	$(SILENT) cxc -c "hello.x" -o "obj/Debug/hello.xo"
 	$(SILENT) c2o -c "obj/Debug/hello.xo" -o "obj/Debug/hello.obj"
 endif
+
 ifeq ($(config),release)
 obj/Release/hello.obj: hello.x hello.x.inc hello.x.inc2
-	@echo "Compiling hello.x"
+	@echo Compiling hello.x
 	$(SILENT) cxc -c "hello.x" -o "obj/Release/hello.xo"
 	$(SILENT) c2o -c "obj/Release/hello.xo" -o "obj/Release/hello.obj"
 endif
