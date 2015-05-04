@@ -264,6 +264,22 @@
 	end
 
 --
+-- get the right output flag.
+--
+	function gcc.getsharedlibarg(cfg)
+		if cfg.system == premake.MACOSX then
+			if cfg.flags.MacOSXBundle then
+				return "-bundle"
+			else
+				return "-dynamiclib"
+			end
+		else
+			return "-shared"
+		end
+	end
+
+
+--
 -- Return a list of LDFLAGS for a specific configuration.
 --
 
@@ -282,7 +298,7 @@
 		},
 		kind = {
 			SharedLib = function(cfg)
-				local r = { iif(cfg.system == p.MACOSX, "-dynamiclib", "-shared") }
+				local r = { gcc.getsharedlibarg(cfg) }
 				if cfg.system == p.WINDOWS and not cfg.flags.NoImportLib then
 					table.insert(r, '-Wl,--out-implib="' .. cfg.linktarget.relpath .. '"')
 				elseif cfg.system == p.LINUX then

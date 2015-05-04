@@ -527,6 +527,8 @@
 			"C90",                 -- DEPRECATED
 			"C99",                 -- DEPRECATED
 			"C11",                 -- DEPRECATED
+
+			"MacOSXBundle"
 		},
 		aliases = {
 			FatalWarnings = { "FatalWarnings", "FatalCompileWarnings", "FatalLinkWarnings" },
