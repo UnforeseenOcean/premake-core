@@ -18,6 +18,11 @@
 #include <sys/sysctl.h>
 #endif
 
+#ifdef PREMAKE_NO_BUILTIN_SCRIPTS
+const char* PREMAKE_VERSION = "bootstrap";
+const char* PREMAKE_COMMIT = "---";
+#endif
+
 #define ERROR_MESSAGE  "Error: %s\n"
 
 
@@ -208,6 +213,7 @@ int premake_init(lua_State* L)
 	lua_newtable(L);
 	lua_setglobal(L, "premake");
 
+	printf("Premake %s (%s)\n%s\n\n", PREMAKE_VERSION, PREMAKE_COMMIT, PREMAKE_COPYRIGHT);
 	return OKAY;
 }
 
