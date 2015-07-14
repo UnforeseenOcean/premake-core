@@ -528,7 +528,8 @@
 			"C99",                 -- DEPRECATED
 			"C11",                 -- DEPRECATED
 
-			"MacOSXBundle"
+			"MacOSXBundle",
+			"NoLibSysDir",        --disable adding /usr/lib on linux
 		},
 		aliases = {
 			FatalWarnings = { "FatalWarnings", "FatalCompileWarnings", "FatalLinkWarnings" },
