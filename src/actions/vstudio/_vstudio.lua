@@ -334,6 +334,18 @@
 		return p.tools.msc.getlinks(cfg, not explicit)
 	end
 
+---
+-- Assemble the list of library directories.
+--
+-- @param cfg
+--    The active configuration.
+-- @return
+--    The list of library directories, ready to be used in Visual Studio's
+--    AdditionalLibraryDirectories element.
+---
+	function vstudio.getLibraryDirectories(cfg)
+		return table.filterempty(config.getlinks(cfg, "system", "directory"))
+	end
 
 
 --
