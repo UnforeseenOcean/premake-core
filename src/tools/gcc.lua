@@ -362,10 +362,26 @@
 		end
 
 		-- Scan the list of linked libraries. If any are referenced with
-		-- paths, add those to the list of library search paths. The call
-		-- config.getlinks() all includes cfg.libdirs.
-		for _, dir in ipairs(config.getlinks(cfg, "system", "directory")) do
+		-- paths, add those to the list of library search paths
+		local done = {}
+		for _, link in ipairs(config.getlinks(cfg, "system", "fullpath")) do
+			local dir = path.getdirectory(link)
+			if #dir > 1 and not done[dir] then
+ 				done[dir] = true
+				if path.isframework(link) then
+					table.insert(flags, '-F' .. p.quoted(dir))
+				else
 			table.insert(flags, '-L' .. p.quoted(dir))
+		end
+			end
+		end
+
+		for _, dir in ipairs(cfg.libdirs) do
+			dir = p.project.getrelative(cfg.project, dir)
+			if #dir > 1 and not done[dir] then
+ 				done[dir] = true
+ 				table.insert(flags, '-L' .. p.quoted(dir))
+ 			end
 		end
 
 		if cfg.flags.RelativeLinks then
@@ -427,18 +443,25 @@
 			elseif path.isobjectfile(link) then
 				table.insert(result, link)
 			else
-				local endswith = function(s, ptrn)
-					return ptrn == string.sub(s, -string.len(ptrn))
-				end
 				local name = path.getname(link)
-				-- Check whether link mode decorator is present
-				if endswith(name, ":static") then
+
+				-- Check whether link mode decorator is present 
+				if name:endswith(":static") then
 					name = string.sub(name, 0, -8)
+					if name:startswith("lib") then
+						name = path.getbasename(name):sub(4)
+					end
 					table.insert(static_syslibs, "-l" .. name)
-				elseif endswith(name, ":shared") then
+				elseif name:endswith(":shared") then
 					name = string.sub(name, 0, -8)
+					if name:startswith("lib") then
+						name = path.getbasename(name):sub(4)
+					end
 					table.insert(shared_syslibs, "-l" .. name)
 				else
+					if name:startswith("lib") then
+						name = path.getbasename(name):sub(4)
+					end
 					table.insert(shared_syslibs, "-l" .. name)
 				end
 			end
@@ -451,7 +474,7 @@
 		if #static_syslibs > 1 then
 			table.insert(static_syslibs, "-Wl,-Bdynamic")
 			move(static_syslibs, result)
-		end
+	    end
 		move(shared_syslibs, result)
 
 		return result
