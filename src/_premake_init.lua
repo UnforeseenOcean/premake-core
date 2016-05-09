@@ -712,6 +712,7 @@
 			"StaticLib",
 			"WindowedApp",
 			"Utility",
+			"Installer",
 		},
 	}
 

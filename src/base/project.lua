@@ -489,6 +489,15 @@
 
 
 --
+-- Returns true if the project is an installer project.
+--
+
+	function project.isinstaller(prj)
+		return prj.kind == "Installer"
+	end
+
+
+--
 -- Returns true if the project has uses any 'native' languages.
 -- which is basically anything other then .net at this point.
 -- modules like the dlang should overload this to add 'project.isd(prj)' to it.
