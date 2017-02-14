@@ -1169,7 +1169,13 @@
 
 	function m.characterSet(cfg)
 		if not vstudio.isMakefile(cfg) then
-			m.element("CharacterSet", nil, iif(cfg.characterset == p.MBCS, "MultiByte", "Unicode"))
+			local charactersets = {
+				NotSet = "NotSet",
+				MBCS = "MultiByte",
+				Unicode = "Unicode",
+				Default = "Unicode"
+			}
+			m.element("CharacterSet", nil, charactersets[cfg.characterset])
 		end
 	end
 
