@@ -530,7 +530,6 @@
 			"C99",                 -- DEPRECATED
 			"C11",                 -- DEPRECATED
 
-			"MacOSXBundle",
 			"NoLibSysDir",        --disable adding /usr/lib on linux
 		},
 		aliases = {
@@ -717,6 +716,16 @@
 			"Installer",
 		},
 	}
+
+	api.register {
+		name = "sharedlibtype",
+    	scope = "project",
+    	kind = "string",
+    	allowed = {
+			"OSXBundle",
+    		"OSXFramework",
+    	},
+    }
 
 	api.register {
 		name = "language",

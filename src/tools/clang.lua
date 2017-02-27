@@ -180,8 +180,10 @@
 --
 	function clang.getsharedlibarg(cfg)
 		if cfg.system == premake.MACOSX then
-			if cfg.flags.MacOSXBundle then
+			if cfg.sharedlibtype and cfg.sharedlibtype == "OSXBundle" then
 				return "-bundle"
+			elseif cfg.sharedlibtype and cfg.sharedlibtype == "OSXFramework" then
+				return "-framework"
 			else
 				return "-dynamiclib"
 			end
