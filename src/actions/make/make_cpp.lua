@@ -385,7 +385,8 @@
 		end
 
 		p.outln('PCH = ' .. pch)
-		p.outln('GCH = $(OBJDIR)/$(notdir $(PCH)).gch')
+		p.outln('PCH_PLACEHOLDER = $(OBJDIR)/$(notdir $(PCH))')
+		p.outln('GCH = $(PCH_PLACEHOLDER).gch')
 	end
 
 
@@ -403,7 +404,7 @@
 	function cpp.forceInclude(cfg, toolset)
 		local includes = toolset.getforceincludes(cfg)
 		if not cfg.flags.NoPCH and cfg.pchheader then
-			table.insert(includes, "-include $(OBJDIR)/$(notdir $(PCH))")
+			table.insert(includes, "-include $(PCH_PLACEHOLDER)")
 		end
 		p.outln('FORCE_INCLUDE +=' .. make.list(includes))
 	end
@@ -706,12 +707,14 @@
 
 	function cpp.pchRules(cfg, toolset)
 		_p('ifneq (,$(PCH))')
-		_p('$(OBJECTS): $(GCH) $(PCH)')
+		_p('$(OBJECTS): $(GCH) $(PCH) $(PCH_PLACEHOLDER)')
 		_p('$(GCH): $(PCH)')
 		_p('\t@echo $(notdir $<)')
 
 		local cmd = iif(cfg.language == "C", "$(CC) -x c-header $(ALL_CFLAGS)", "$(CXX) -x c++-header $(ALL_CXXFLAGS)")
 		_p('\t$(SILENT) %s -o "$@" -MF "$(@:%%.gch=%%.d)" -c "$<"', cmd)
+		_p('$(PCH_PLACEHOLDER):')
+		_p('\t$(SILENT) touch "$@"')
 		_p('endif')
 		_p('')
 	end
@@ -777,7 +780,7 @@
 		-- include the dependencies, built by GCC (with the -MMD flag)
 		_p('-include $(OBJECTS:%%.o=%%.d)')
 		_p('ifneq (,$(PCH))')
-			_p('  -include $(OBJDIR)/$(notdir $(PCH)).d')
+			_p('  -include "$(PCH_PLACEHOLDER).d"')
 		_p('endif')
 	end
 

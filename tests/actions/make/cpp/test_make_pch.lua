@@ -65,7 +65,8 @@
 		prepareVars()
 		test.capture [[
 PCH = include/myproject.h
-GCH = $(OBJDIR)/$(notdir $(PCH)).gch
+PCH_PLACEHOLDER = $(OBJDIR)/$(notdir $(PCH))
+GCH = $(PCH_PLACEHOLDER).gch
 		]]
 	end
 
@@ -93,10 +94,12 @@ PCH = ../src/host/premake.h
 		prepareRules()
 		test.capture [[
 ifneq (,$(PCH))
-$(OBJECTS): $(GCH) $(PCH)
+$(OBJECTS): $(GCH) $(PCH) $(PCH_PLACEHOLDER)
 $(GCH): $(PCH)
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -x c++-header $(ALL_CXXFLAGS) -o "$@" -MF "$(@:%.gch=%.d)" -c "$<"
+$(PCH_PLACEHOLDER):
+	$(SILENT) touch "$@"
 endif
 		]]
 	end
@@ -112,10 +115,12 @@ endif
 		prepareRules()
 		test.capture [[
 ifneq (,$(PCH))
-$(OBJECTS): $(GCH) $(PCH)
+$(OBJECTS): $(GCH) $(PCH) $(PCH_PLACEHOLDER)
 $(GCH): $(PCH)
 	@echo $(notdir $<)
 	$(SILENT) $(CC) -x c-header $(ALL_CFLAGS) -o "$@" -MF "$(@:%.gch=%.d)" -c "$<"
+$(PCH_PLACEHOLDER):
+	$(SILENT) touch "$@"
 endif
 		]]
 	end
