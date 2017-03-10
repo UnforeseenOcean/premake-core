@@ -516,44 +516,38 @@
 --
 -- Write out the per file configurations.
 --
-
-	cpp.elements.perFileConfigs = function(cfg)
-		local funcs = {}
-
-		table.foreachi(cfg.project._.files, function(node)
-			local fcfg = fileconfig.getconfig(node, cfg)
-			if fcfg then
-				table.insert(funcs, function(cfg, toolset)
-					cpp.perFileFlags(cfg, toolset, fcfg)
-				end)
-			end
-		end)
-
-		return funcs
-	end
-
 	function cpp.outputPerFileConfigurationSection(prj)
 		_p('# Per File Configurations')
 		_p('# #############################################')
 		_p('')
-		make.outputSection(prj, cpp.elements.perFileConfigs)
+		for cfg in project.eachconfig(prj) do
+			table.foreachi(cfg.project._.files, function(node)
+				local fcfg = fileconfig.getconfig(node, cfg)
+				if fcfg then
+					cpp.perFileFlags(cfg, fcfg)
+				end
+			end)
+		end
+		_p('')
 	end
 
-	local function makeVarName(prj, value)
+	local function makeVarName(prj, value, saltValue)
 		prj._gmake.varlist = prj._gmake.varlist or {}
 		local cache = prj._gmake.varlist
 
-		if (cache[value] ~= nil) then
-			return cache[value]
+		local key = value .. saltValue
+
+		if (cache[key] ~= nil) then
+			return cache[key], false
 		end
 
 		local var = string.format("PERFILE_FLAGS_%d",  #cache)
-		table.insert(cache, value)
-		cache[value] = var
-		return var;
+		cache[key] = var
+		return var, true
 	end
 
-	function cpp.perFileFlags(cfg, toolset, fcfg)
+	function cpp.perFileFlags(cfg, fcfg)
+		local toolset = make.getToolSet(cfg)
 
 		local value = make.list(table.join(toolset.getcflags(fcfg), fcfg.buildoptions))
 
@@ -572,11 +566,14 @@
 		end
 
 		if #value > 0 then
-			fcfg.flagsVariable = makeVarName(cfg.project, fcfg, 'FLAGS')
-			if path.iscfile(fcfg.name) then
-				_p('%s = $(ALL_CFLAGS)%s', fcfg.flagsVariable, value)
-			else
-				_p('%s = $(ALL_CXXFLAGS)%s', fcfg.flagsVariable, value)
+			local newPerFileFlag = false
+			fcfg.flagsVariable, newPerFileFlag = makeVarName(cfg.project, value, iif(path.iscfile(fcfg.name), '_C', '_CPP'))
+			if newPerFileFlag then
+				if path.iscfile(fcfg.name) then
+					_p('%s = $(ALL_CFLAGS)%s', fcfg.flagsVariable, value)
+				else
+					_p('%s = $(ALL_CXXFLAGS)%s', fcfg.flagsVariable, value)
+				end
 			end
 		end
 	end
@@ -656,13 +653,13 @@
 
 	function cpp.allRules(cfg, toolset)
 		if cfg.system == premake.MACOSX and cfg.kind == premake.WINDOWEDAPP then
-			_p('all: $(TARGETDIR) $(OBJDIR) prebuild prelink $(TARGET) $(dir $(TARGETDIR))PkgInfo $(dir $(TARGETDIR))Info.plist')
+			_p('all: $(TARGET) $(dir $(TARGETDIR))PkgInfo $(dir $(TARGETDIR))Info.plist | $(TARGETDIR) $(OBJDIR) prebuild prelink')
 			_p('\t@:')
 			_p('')
 			_p('$(dir $(TARGETDIR))PkgInfo:')
 			_p('$(dir $(TARGETDIR))Info.plist:')
 		else
-			_p('all: $(TARGETDIR) $(OBJDIR) prebuild prelink $(TARGET)')
+			_p('all: $(TARGET) | $(TARGETDIR) $(OBJDIR) prebuild prelink')
 			_p('\t@:')
 		end
 		_p('')
@@ -683,7 +680,7 @@
 			targets = targets .. ' $(RESOURCES)'
 		end
 
-		_p('$(TARGET): %s', targets)
+		_p('$(TARGET): %s | $(TARGETDIR)', targets)
 		_p('\t@echo Linking %s', cfg.project.name)
 		_p('\t$(SILENT) $(LINKCMD)')
 		_p('\t$(POSTBUILDCMDS)')
@@ -707,14 +704,15 @@
 
 	function cpp.pchRules(cfg, toolset)
 		_p('ifneq (,$(PCH))')
-		_p('$(OBJECTS): $(GCH) $(PCH) $(PCH_PLACEHOLDER)')
-		_p('$(GCH): $(PCH)')
+		_p('$(OBJECTS): $(GCH) $(PCH) | $(OBJDIR) $(PCH_PLACEHOLDER)')
+		_p('$(GCH): $(PCH) | $(OBJDIR)')
 		_p('\t@echo $(notdir $<)')
-
 		local cmd = iif(cfg.language == "C", "$(CC) -x c-header $(ALL_CFLAGS)", "$(CXX) -x c++-header $(ALL_CXXFLAGS)")
 		_p('\t$(SILENT) %s -o "$@" -MF "$(@:%%.gch=%%.d)" -c "$<"', cmd)
-		_p('$(PCH_PLACEHOLDER):')
+		_p('$(PCH_PLACEHOLDER): $(GCH) | $(OBJDIR)')
 		_p('\t$(SILENT) touch "$@"')
+		_p('else')
+		_p('$(OBJECTS): | $(OBJDIR)')
 		_p('endif')
 		_p('')
 	end

@@ -240,6 +240,16 @@
 	end
 
 
+	function make.getToolSet(cfg)
+		local default = iif(cfg.system == premake.MACOSX, "clang", "gcc")
+		local toolset = p.tools[_OPTIONS.cc or cfg.toolset or default]
+		if not toolset then
+			error("Invalid toolset '" .. cfg.toolset .. "'")
+		end
+		return toolset
+	end
+
+
 	function make.outputSection(prj, callback)
 		local root = {}
 
@@ -247,11 +257,7 @@
 			-- identify the toolset used by this configurations (would be nicer if
 			-- this were computed and stored with the configuration up front)
 
-			local default = iif(cfg.system == premake.MACOSX, "clang", "gcc")
-			local toolset = p.tools[_OPTIONS.cc or cfg.toolset or default]
-			if not toolset then
-				error("Invalid toolset '" .. cfg.toolset .. "'")
-			end
+			local toolset = make.getToolSet(cfg)
 
 			local settings = {}
 			local funcs = callback(cfg)
