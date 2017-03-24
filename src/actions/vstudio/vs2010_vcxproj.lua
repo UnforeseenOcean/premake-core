@@ -1691,7 +1691,6 @@
 				isMakefile = true
 			end
 		end
-
 		if isWin then
 			if isMakefile then
 				m.element("Keyword", nil, "MakeFileProj")
