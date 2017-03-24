@@ -166,7 +166,7 @@
 			linkoptions { "-rdynamic" }
 
 		filter "system:linux or hurd"
-			links       { "dl", "rt" }
+			links       { "dl", "rt", "pthread" }
 
 		filter { "system:not windows", "system:not macosx" }
 			if not _OPTIONS["no-curl"] then
