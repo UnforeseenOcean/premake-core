@@ -48,7 +48,7 @@
 			printf("Examining NuGet package source '%s'...", prj.nugetsource)
 			io.flush()
 
-			local response, err, code = http.get(prj.nugetsource)
+			local response, err, code = http.get(prj.nugetsource, { sslverifypeer = 0 })
 
 			if err ~= "OK" then
 				p.error("NuGet API error (%d)\n%s", code, err)
@@ -108,7 +108,7 @@
 				printf("Examining NuGet package '%s'...", id)
 				io.flush()
 
-			local response, err, code = http.get(packageSourceInfos[prj.nugetsource].packageDisplayMetadataUriTemplate["@id"]:gsub("{id%-lower}", id:lower()))
+			local response, err, code = http.get(packageSourceInfos[prj.nugetsource].packageDisplayMetadataUriTemplate["@id"]:gsub("{id%-lower}", id:lower()), { sslverifypeer = 0 })
 
 				if err ~= "OK" then
 					if code == 404 then
@@ -167,7 +167,7 @@
 
 			for _, item in ipairs(items) do
 					if item.catalogEntry.version == version then
-						local response, err, code = http.get(item.catalogEntry["@id"])
+						local response, err, code = http.get(item.catalogEntry["@id"], { sslverifypeer = 0 })
 
 						if err ~= "OK" then
 							if code == 404 then
