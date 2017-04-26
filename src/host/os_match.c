@@ -177,7 +177,7 @@ int os_matchisfile(lua_State* L)
 		fname = lua_tostring(L, -1);
 		lua_pop(L, 1);
 
-		lua_pushboolean(L, do_isfile(L, fname));
+		lua_pushboolean(L, do_isfile(fname));
 	}
 	return 1;
 }

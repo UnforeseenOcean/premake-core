@@ -378,7 +378,7 @@ int premake_locate_executable(lua_State* L, const char* argv0)
 int premake_test_file(lua_State* L, const char* filename, int searchMask)
 {
 	if (searchMask & TEST_LOCAL) {
-		if (do_isfile(L, filename)) {
+		if (do_isfile(filename)) {
 			lua_pushcfunction(L, path_getabsolute);
 			lua_pushstring(L, filename);
 			lua_call(L, 1, 1);
