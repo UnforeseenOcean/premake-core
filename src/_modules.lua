@@ -7,6 +7,7 @@
 	return {
 		"xcode",
 		"codelite",
+		"consoles",
 		"blizzard",
 		"autoconf",
 	}
