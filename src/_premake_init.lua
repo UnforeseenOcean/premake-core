@@ -521,6 +521,7 @@
 			"StaticRuntime",
 			"Symbols",             -- DEPRECATED
 			"UndefinedIdentifiers",
+			"Unicode",             -- DEPRECATED
 			"WinMain",             -- DEPRECATED
 			"WPF",
 			"C++11",               -- DEPRECATED
@@ -1275,6 +1276,16 @@
 -- Handlers for deprecated fields and values.
 --
 -----------------------------------------------------------------------------
+
+-- 18 Dec 2015
+
+	api.deprecateValue("flags", "Unicode", 'Use `characterset "Unicode"` instead',
+	function(value)
+		characterset "Unicode"
+	end,
+	function(value)
+		characterset "Default"
+	end)
 
 	-- 13 Apr 2017
 
