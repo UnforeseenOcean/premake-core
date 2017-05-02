@@ -1131,7 +1131,9 @@
 			value = value:lower()
 			local tool, version = p.tools.canonical(value)
 			if tool then
-				return value
+				return p.tools.normalize(value)
+			else
+				return nil
 			end
 		end,
 	}

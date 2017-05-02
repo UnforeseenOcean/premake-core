@@ -107,3 +107,11 @@
 		prepare()
 		test.isequal({}, cfg.defines)
 	end
+
+	function suite.onFilterToolsetNormalization()
+		toolset "v140"
+		filter { "toolset:msc-v140" }
+		defines { "USE_MSC" }
+		prepare()
+		test.isequal({ "USE_MSC" }, cfg.defines)
+	end
