@@ -18,6 +18,7 @@
 		trigger         = "codelite",
 		shortname       = "CodeLite",
 		description     = "Generate CodeLite project files",
+		toolset         = "gcc",
 
 		-- The capabilities of this action
 

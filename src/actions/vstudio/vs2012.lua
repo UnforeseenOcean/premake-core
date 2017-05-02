@@ -24,6 +24,7 @@
 		-- Visual Studio always uses Windows path and naming conventions
 
 		targetos = "windows",
+		toolset  = "msc-v110",
 
 		-- The capabilities of this action
 
@@ -65,7 +66,6 @@
 			versionName     = "2012",
 			targetFramework = "4.5",
 			toolsVersion    = "4.0",
-			platformToolset = "v110"
 		}
 	}
 
