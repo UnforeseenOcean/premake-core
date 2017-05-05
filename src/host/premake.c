@@ -124,6 +124,8 @@ static const luaL_Reg http_functions[] = {
 static const luaL_Reg telemetry_functions[] = {
 	{ "send", telemetry_send },
 	{ "wait", telemetry_wait },
+	{ "gethostname", telemetry_gethostname },
+	{ "getusername", telemetry_getusername },
 	{ NULL, NULL }
 };
 #endif

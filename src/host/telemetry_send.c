@@ -9,12 +9,22 @@
 #include "curl_utils.h"
 #include <stdlib.h>
 
-#if defined(_WIN32)
+#if PLATFORM_WINDOWS
 #   include <process.h>
 typedef HANDLE ThreadID;
 #else
 #   include <pthread.h>
+#  include <unistd.h>
+#  include <limits.h>
 typedef pthread_t ThreadID;
+#endif
+
+#ifndef HOST_NAME_MAX
+#define HOST_NAME_MAX 512
+#endif
+
+#ifndef LOGIN_NAME_MAX
+#define LOGIN_NAME_MAX 512
 #endif
 
 typedef struct
@@ -27,7 +37,7 @@ typedef struct
 } Telemetry;
 
 
-#if defined(_WIN32)
+#if PLATFORM_WINDOWS
 static DWORD __stdcall _threadFunc(void* context)
 #else
 static void* _threadFunc(void* context)
@@ -56,7 +66,7 @@ int telemetry_send(lua_State* L)
 	t->code = CURLE_FAILED_INIT;
 	t->responseCode = 0;
 
-#if defined(_WIN32)
+#if PLATFORM_WINDOWS
 	t->threadHandle = CreateThread(NULL, 0, _threadFunc, t, 0, NULL);
 	if (t->threadHandle == NULL)
 	{
@@ -85,7 +95,7 @@ int telemetry_wait(lua_State* L)
 	Telemetry* t = (Telemetry*)lua_touserdata(L, 1);
 	if (t != NULL)
 	{
-#if defined(_WIN32)
+#if PLATFORM_WINDOWS
 		WaitForSingleObject(t->threadHandle, INFINITE);
 		CloseHandle(t->threadHandle);
 #else
@@ -114,6 +124,62 @@ int telemetry_wait(lua_State* L)
 	}
 
 	return 0;
+}
+
+int telemetry_gethostname(lua_State* L)
+{
+#if PLATFORM_WINDOWS
+	wchar_t wname[HOST_NAME_MAX];
+	DWORD  charCount = HOST_NAME_MAX;
+
+	if (GetComputerNameW(wname, &charCount))
+	{
+		char name[1024];
+		WideCharToMultiByte(CP_UTF8, 0, wname, -1, name, 1024, NULL, NULL);
+		lua_pushstring(L, name);
+	}
+	else
+	{
+		lua_pushnil(L);
+	}
+
+	return 1;
+#else
+	char name[HOST_NAME_MAX];
+	if (gethostname(name, HOST_NAME_MAX) == 0)
+		lua_pushstring(L, name);
+	else
+		lua_pushnil(L);
+	return 1;
+#endif
+}
+
+int telemetry_getusername(lua_State* L)
+{
+#if PLATFORM_WINDOWS
+	wchar_t wname[LOGIN_NAME_MAX];
+	DWORD  charCount = LOGIN_NAME_MAX;
+
+	if (GetUserNameW(wname, &charCount))
+	{
+		char name[1024];
+		WideCharToMultiByte(CP_UTF8, 0, wname, -1, name, 1024, NULL, NULL);
+		lua_pushstring(L, name);
+	}
+	else
+	{
+		lua_pushnil(L);
+	}
+
+	return 1;
+#else
+	char name[LOGIN_NAME_MAX];
+	if (getlogin_r(name, LOGIN_NAME_MAX) == 0)
+		lua_pushstring(L, name);
+	else
+		lua_pushnil(L);
+	return 1;
+#endif
 }
 
 #endif // PREMAKE_CURL

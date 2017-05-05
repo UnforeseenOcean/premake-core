@@ -138,6 +138,8 @@ int term_getTextColor(lua_State* L);
 int term_setTextColor(lua_State* L);
 int telemetry_send(lua_State* L);
 int telemetry_wait(lua_State* L);
+int telemetry_gethostname(lua_State* L);
+int telemetry_getusername(lua_State* L);
 
 #ifdef PREMAKE_CURL
 int http_get(lua_State* L);
