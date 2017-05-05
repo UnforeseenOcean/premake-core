@@ -196,6 +196,9 @@ int premake_init(lua_State* L)
 	lua_pushstring(L, PREMAKE_VERSION);
 	lua_setglobal(L, "_PREMAKE_VERSION");
 
+	lua_pushstring(L, PREMAKE_COMMIT);
+	lua_setglobal(L, "_PREMAKE_COMMIT");
+
 	lua_pushstring(L, PREMAKE_COPYRIGHT);
 	lua_setglobal(L, "_PREMAKE_COPYRIGHT");
 

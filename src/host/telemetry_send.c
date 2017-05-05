@@ -37,6 +37,8 @@ static void* _threadFunc(void* context)
 	CURL* curl = T->curl;
 
 	curl_easy_setopt(curl, CURLOPT_POST, 1);
+	curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, 0);
+	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, NULL);
 	T->code = curl_easy_perform(curl);
 	curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &T->responseCode);
 	curlCleanup(curl, &T->state);
