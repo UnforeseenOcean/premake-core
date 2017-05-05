@@ -1,4 +1,5 @@
 recursiveClone: true
+quiet: true
 
 jobs:
 - env:
