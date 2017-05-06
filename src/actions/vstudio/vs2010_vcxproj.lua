@@ -788,7 +788,8 @@
 
 		emitFiles = function(prj, group)
 			local fileCfgFunc = {
-				m.excludedFromBuild
+				m.excludedFromBuild,
+				m.exceptionHandlingSEH,
 			}
 
 			m.emitFiles(prj, group, "Masm", nil, fileCfgFunc, function(cfg)
@@ -1337,6 +1338,13 @@
 	function m.excludedFromBuild(filecfg, condition)
 		if not filecfg or filecfg.flags.ExcludeFromBuild then
 			m.element("ExcludedFromBuild", condition, "true")
+		end
+	end
+
+
+	function m.exceptionHandlingSEH(filecfg, condition)
+		if not filecfg or filecfg.project.exceptionhandling == "SEH" then
+			m.element("UseSafeExceptionHandlers", condition, "true")
 		end
 	end
 
