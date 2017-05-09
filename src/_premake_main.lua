@@ -142,7 +142,7 @@
 ---
 
 	function m.locateUserScript()
-		local defaults = { "premake-bnet.lua", "premake5.lua", "premake4.lua" }
+		local defaults = { "premake5.lua", "premake4.lua", "premake-bnet.lua" }
 		for i = 1, #defaults do
 			if os.isfile(defaults[i]) then
 				_MAIN_SCRIPT = defaults[i]
@@ -150,9 +150,14 @@
 			end
 		end
 
+		if (_MAIN_SCRIPT == "premake-bnet.lua") then
+			p.warnOnce(_MAIN_SCRIPT, "'premake-bnet.lua' has been deprecated; rename to 'premake5.lua'.")
+		end
+
 		if not _MAIN_SCRIPT then
 			_MAIN_SCRIPT = defaults[1]
 		end
+
 
 		if _OPTIONS.file then
 			_MAIN_SCRIPT = _OPTIONS.file
