@@ -659,8 +659,13 @@
 			if #prj.nuget > 0 then
 				addFile("packages.config")
 			end
+		end
 
-			-- process build file exclusions for this configuration
+		-- process build file exclusions for this project
+		oven.processExcludes(prj, files)
+
+		-- process build file exclusions for all configurations
+		for cfg in p.project.eachconfig(prj) do
 			oven.processExcludes(cfg, files)
 		end
 
