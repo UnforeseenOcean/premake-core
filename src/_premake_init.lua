@@ -720,13 +720,13 @@
 
 	api.register {
 		name = "sharedlibtype",
-    	scope = "project",
-    	kind = "string",
-    	allowed = {
+		scope = "project",
+		kind = "string",
+		allowed = {
 			"OSXBundle",
-    		"OSXFramework",
-    	},
-    }
+			"OSXFramework",
+		},
+	}
 
 	api.register {
 		name = "language",
@@ -1260,6 +1260,17 @@
 		name = "editorintegration",
 		scope = "workspace",
 		kind = "boolean",
+	}
+
+	api.register {
+		name = "preferredtoolarchitecture",
+		scope = "workspace",
+		kind = "string",
+		allowed = {
+			"Default",
+			p.X86,
+			p.X86_64,
+		}
 	}
 
 -----------------------------------------------------------------------------
