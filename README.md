@@ -7,15 +7,17 @@
 
 Premake is a command line utility which reads a scripted definition of a software project and, most commonly, uses it to generate project files for toolsets like Visual Studio, Xcode, or GNU Make. Built-in and Third-Party [Modules](https://github.com/premake/premake-core/wiki/Modules) add support for even more toolsets.
 
-Find out in detail [what Premake is](https://github.com/premake/premake-core/wiki/What-Is-Premake) and how to use it in the [wiki](https://github.com/premake/premake-core/wiki).
+Find out in detail [what Premake is](https://github.com/premake/premake-core/wiki/What-Is-Premake) and how to use it in the [wiki](https://github.com/blizzard/premake-core/wiki).
 
 ### Get started
 
-* [Download Premake](http://premake.github.io/download.html)
-* [Read the wiki](https://github.com/premake/premake-core/wiki) to find out how to get your project up and running with Premake.
+* [Download Premake](http://***REMOVED***/premake)
+* [Read the wiki](https://github.com/blizzard/premake-core/wiki) to find out how to get your project up and running with Premake.
 
+### Blizzard Mailing list
+* [#Premake Discussions](mailto:***REMOVED***)
 
-### News and Community
+### News and OSS Community
 
 * Check the official [Github project](https://github.com/premake/premake-core) for the latest developments
 * For questions about using Premake and authoring project scripts, please ask on [StackOverflow, adding the #premake tag to your question](http://stackoverflow.com/questions/tagged/premake).
@@ -23,7 +25,7 @@ Find out in detail [what Premake is](https://github.com/premake/premake-core/wik
 
 ### Report isssues
 
-Something not working quite as expected? Do you need a feature that has not been implemented yet? Check the [issue tracker](https://github.com/premake/premake-core/issues) and add a new one if your problem is not already listed. Please try to provide a detailed description of your problem, including the steps to reproduce it.
+Something not working quite as expected? Do you need a feature that has not been implemented yet? Check the [issue tracker](https://github.com/blizzard/premake-core/issues) and add a new one if your problem is not already listed. Please try to provide a detailed description of your problem, including the steps to reproduce it.
 
 ### Contribute
 
