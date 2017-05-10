@@ -42,26 +42,26 @@
 
 	function suite.CanStripPaths()
 		files { "src/myproject/hello.c" }
-		vpaths { [""] = "src" }
+		vpaths { [""] = "src/**" }
 		run()
 		test.isequal("hello.c", run())
 	end
 
 	function suite.CanTrimLeadingPaths()
 		files { "src/myproject/hello.c" }
-		vpaths { ["*"] = "src" }
+		vpaths { ["*"] = "src/**" }
 		test.isequal("myproject/hello.c", run())
 	end
 
 	function suite.PatternMayIncludeTrailingSlash()
 		files { "src/myproject/hello.c" }
-		vpaths { [""] = "src/myproject/" }
+		vpaths { [""] = "src/myproject/*" }
 		test.isequal("hello.c", run())
 	end
 
 	function suite.SimpleReplacementPatterns()
 		files { "src/myproject/hello.c" }
-		vpaths { ["sources"] = "src/myproject" }
+		vpaths { ["sources"] = "src/myproject/*" }
 		test.isequal("sources/hello.c", run())
 	end
 
@@ -138,7 +138,7 @@
 	function suite.MatchPath_OnProjectLocationSet()
 		location "build"
 		files "src/hello.h"
-		vpaths { [""] = "src" }
+		vpaths { [""] = "src/**" }
 		test.isequal("hello.h", run())
 	end
 
