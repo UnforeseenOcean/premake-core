@@ -115,3 +115,27 @@
 		prepare()
 		test.isequal({ "USE_MSC" }, cfg.defines)
 	end
+
+--
+-- Test filtering on system.
+--
+
+	function suite.onFilterLinuxIsPosix()
+		system "linux"
+		filter { "system:posix" }
+			defines { "POSIX" }
+		filter { "system:not posix" }
+			defines { "NOTPOSIX" }
+		prepare()
+		test.isequal({ "POSIX" }, cfg.defines)
+	end
+
+	function suite.onFilterWindowsIsNotPosix()
+		system "windows"
+		filter { "system:posix" }
+			defines { "POSIX" }
+		filter { "system:not posix" }
+			defines { "NOTPOSIX" }
+		prepare()
+		test.isequal({ "NOTPOSIX" }, cfg.defines)
+	end
