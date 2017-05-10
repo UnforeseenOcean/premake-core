@@ -171,6 +171,15 @@
 	end
 
 
+	function suite.createCriteriaWithTable()
+		crit = criteria.new {
+			files  = { "**.c" },
+			system = "windows"
+		}
+		test.istrue(criteria.matches(crit, { system="windows", files="hello.c" }))
+	end
+
+
 --
 -- "Not" modifiers can also be used on filenames.
 --
