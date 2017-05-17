@@ -10,4 +10,5 @@
 		"consoles",
 		"blizzard",
 		"autoconf",
+		"packagemanager",
 	}
