@@ -1024,6 +1024,16 @@
 	}
 
 	api.register {
+		name = "resourcegenerator",
+		scope = "project",
+		kind = "string",
+        allowed = {
+            "internal",
+            "public"
+        }
+	}
+
+	api.register {
 		name = "rtti",
 		scope = "config",
 		kind = "string",
