@@ -1,6 +1,12 @@
 recursiveClone: true
 quiet: true
 
+history:
+  build:
+    number: 16
+  archive:
+    number: 16
+
 jobs:
 - env:
   - windows
