@@ -681,9 +681,9 @@
 			["bsd"]      = { "bsd",     "posix" },
 			["haiku"]    = { "haiku",   "posix" },
 			["linux"]    = { "linux",   "posix" },
-			["macosx"]   = { "macosx",  "posix" },
+			["macosx"]   = { "macosx",  "darwin", "posix" },
 			["solaris"]  = { "solaris", "posix" },
-			["windows"]  = { "windows" },
+			["windows"]  = { "windows", "win32" },
 		}
 		return tags[name] or name
 	end
