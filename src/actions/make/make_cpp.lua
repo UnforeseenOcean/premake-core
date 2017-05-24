@@ -653,13 +653,13 @@
 
 	function cpp.allRules(cfg, toolset)
 		if cfg.system == premake.MACOSX and cfg.kind == premake.WINDOWEDAPP then
-			_p('all: $(TARGET) $(dir $(TARGETDIR))PkgInfo $(dir $(TARGETDIR))Info.plist | $(TARGETDIR) $(OBJDIR) prebuild prelink')
+			_p('all: prebuild prelink $(TARGET) $(dir $(TARGETDIR))PkgInfo $(dir $(TARGETDIR))Info.plist | $(TARGETDIR) $(OBJDIR)')
 			_p('\t@:')
 			_p('')
 			_p('$(dir $(TARGETDIR))PkgInfo:')
 			_p('$(dir $(TARGETDIR))Info.plist:')
 		else
-			_p('all: $(TARGET) | $(TARGETDIR) $(OBJDIR) prebuild prelink')
+			_p('all: prebuild prelink $(TARGET) | $(TARGETDIR) $(OBJDIR)')
 			_p('\t@:')
 		end
 		_p('')
