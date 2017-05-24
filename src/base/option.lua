@@ -33,6 +33,9 @@
 	_OPTIONS = {}
 	setmetatable(_OPTIONS, _OPTIONS_metatable)
 
+	local _OPTIONS_SET = {}
+	setmetatable(_OPTIONS_SET, _OPTIONS_metatable)
+
 
 --
 -- Process the raw command line arguments from _ARGV to populate
@@ -51,9 +54,13 @@
 		end
 
 		if key:startswith("/") then
-			_OPTIONS[key:sub(2)] = value
+			key = key:sub(2)
+			_OPTIONS[key] = value
+			_OPTIONS_SET[key] = true
 		elseif key:startswith("--") then
-			_OPTIONS[key:sub(3)] = value
+			key = key:sub(3)
+			_OPTIONS[key] = value
+			_OPTIONS_SET[key] = true
 		end
 	end
 
@@ -90,8 +97,8 @@
 		-- add it to the master list
 		p.option.list[opt.trigger:lower()] = opt
 
-		-- if it has a default value, set it.
-		if opt.default and not _OPTIONS[opt.trigger] then
+		-- if it was not set from the commandline, set it to the default.
+		if not _OPTIONS_SET[opt.trigger] then
 			_OPTIONS[opt.trigger] = opt.default
 		end
 	end
@@ -108,7 +115,7 @@
 --
 
 	function m.get(name)
-		return p.option.list[name]
+		return p.option.list[name:lower()]
 	end
 
 
@@ -129,6 +136,35 @@
 		return function()
 			i = i + 1
 			return p.option.list[keys[i]]
+		end
+	end
+
+
+--
+-- Test if an options was set from the command line.
+--
+
+	function m.isset(name)
+		return _OPTIONS_SET[name]
+	end
+
+
+--
+-- Override the default of an option.
+--
+
+	function m.setDefault(name, value)
+		local opt = m.get(name)
+		if (not opt) then
+			error("invalid option '" .. name .. "'.")
+		end
+
+		-- set default.
+		opt.default = value
+
+		-- if it was not set from the commandline, set it to the default.
+		if not _OPTIONS_SET[opt.trigger] then
+			_OPTIONS[opt.trigger] = opt.default
 		end
 	end
 
