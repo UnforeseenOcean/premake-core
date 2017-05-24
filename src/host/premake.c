@@ -226,7 +226,8 @@ int premake_init(lua_State* L)
 	lua_newtable(L);
 	lua_setglobal(L, "premake");
 
-	printf("Premake %s (%s)\n%s\n\n", PREMAKE_VERSION, PREMAKE_COMMIT, PREMAKE_COPYRIGHT);
+	printf("Premake %s (%s), a build script generator.\n%s\n", PREMAKE_VERSION, PREMAKE_COMMIT, PREMAKE_COPYRIGHT);
+	printf("%s %s\n\n", LUA_VERSION, LUA_COPYRIGHT);
 	return OKAY;
 }
 

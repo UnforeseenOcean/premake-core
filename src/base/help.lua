@@ -6,12 +6,7 @@
 
 
 	function premake.showhelp()
-
 		-- display the basic usage
-		printf("Premake %s, a build script generator", _PREMAKE_VERSION)
-		printf(_PREMAKE_COPYRIGHT)
-		printf("%s %s", _VERSION, _COPYRIGHT)
-		printf("")
 		printf("Usage: premake5 [options] action [arguments]")
 		printf("")
 
@@ -67,10 +62,9 @@
 		end
 		printf("")
 
-
 		-- see more
-		printf("For additional information, see http://industriousone.com/premake")
-
+		printf("For additional information, see https://github.com/blizzard/premake-core/wiki")
+		printf("For support email: ***REMOVED***")
 	end
 
 
