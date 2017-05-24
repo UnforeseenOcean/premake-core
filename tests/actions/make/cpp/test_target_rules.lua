@@ -48,7 +48,7 @@ all: prebuild prelink $(TARGET) | $(TARGETDIR) $(OBJDIR)
 		kind "WindowedApp"
 		prepare()
 		test.capture [[
-all:  prebuild prelink $(TARGET) $(dir $(TARGETDIR))PkgInfo $(dir $(TARGETDIR))Info.plist | $(TARGETDIR) $(OBJDIR)
+all: prebuild prelink $(TARGET) $(dir $(TARGETDIR))PkgInfo $(dir $(TARGETDIR))Info.plist | $(TARGETDIR) $(OBJDIR)
 	@:
 
 $(dir $(TARGETDIR))PkgInfo:
